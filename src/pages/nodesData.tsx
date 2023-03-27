@@ -26,39 +26,10 @@ const initialNodes: Node[] = [
     type: 'startingNode',
     position: { x: 0, y: 0 },
     data: { value: 123 }
-  },
-  { 
-    id: 'dndnode_1',
-    type: 'addNode',
-    position: { x: 43, y: 240 },
-    data: { value: 123 }
-  },
-  { 
-    id: 'dndnode_2',
-    type: 'textInputNode',
-    position: { x: 36, y: 350 },
-    data: { value: 123 }
   }
 ]
 
-const initialEdges: Edge[] = [
-  {
-    source: 'dndnode_0',
-    sourceHandle: 'b',
-    target: 'dndnode_1',
-    targetHandle: 'a',
-    id: `reactflow__edge-dndnode_0-dndnode_1`,
-    type: 'addbuttonedge'
-  },
-  {
-    source: 'dndnode_1',
-    sourceHandle: 'b',
-    target: 'dndnode_2',
-    targetHandle: 'a',
-    id: `reactflow__edge-dndnode_1-dndnode_2`,
-    type: 'addbuttonedge'
-  }
-]
+const initialEdges: Edge[] = []
 
 const nodeTypes: NodeTypes = {
   startingNode: InitialNode,
@@ -70,7 +41,10 @@ const edgeTypes: EdgeTypes = {
   addbuttonedge: ButtonEdge,
 };
 
-let id = 3;
+let id = 1;
 const getId = () => `dndnode_${id++}`;
 
-export { initialNodes, initialEdges, nodeTypes, getId, nodeColor, edgeTypes }
+let addId = 0;
+const getAddId = () => `addnode_${id++}`;
+
+export { initialNodes, initialEdges, nodeTypes, getId, getAddId, nodeColor, edgeTypes }

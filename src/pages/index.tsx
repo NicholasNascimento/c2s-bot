@@ -103,73 +103,77 @@ export default function Home() {
     [reactFlowInstance]
   );
 
-  const onNodeDrag = (_, node) => {
-    const centerX = node.position.x + node.width / 2;
-    const centerY = node.position.y + node.height / 2;
+  // const onNodeDrag = (_, node) => {
+  //   const centerX = node.position.x + node.width / 2;
+  //   const centerY = node.position.y + node.height / 2;
 
-    const targetNode = nodes.find(
-      (n) =>
-        centerX > n.position.x &&
-        centerX < n.position.x + n.width &&
-        centerY > n.position.y &&
-        centerY < n.position.y + n.height &&
-        n.id !== node.id
-    );
+  //   const targetNode = nodes.find(
+  //     (n) =>
+  //       centerX > n.position.x &&
+  //       centerX < n.position.x + n.width &&
+  //       centerY > n.position.y &&
+  //       centerY < n.position.y + n.height &&
+  //       n.id !== node.id
+  //   );
 
-    setTarget(targetNode);
-  };
+  //   setTarget(targetNode);
+  // };
 
-  const onNodeDragStop = (_, node) => {
-    setNodes((nodes) =>
-      nodes.map((n) => {
-        if (n.id === target?.id && target.type === 'addNode') {
-          edges.map((e) => {
-            if (e.target === target.id) {
-              setNewSource(e.source)
-              setNode(node.id)
-            }
-            if (e.source === target.id) {
-              setNewTarget(e.target)
-              setNodes([...nodes.filter(nds => nds.id !== target.id)])
-            }
-          })
-        }
-        return n;
-      })
-    );
+  // const onNodeDragStop = (_, node) => {
+  //   setNodes((nodes) =>
+  //     nodes.map((n) => {
+  //       if (n.id === target?.id && target.type === 'addNode') {
+  //         edges.map((e) => {
+  //           if (e.target === target.id) {
+  //             setNewSource(e.source)
+  //             setNode(node.id)
+  //           }
+  //           if (e.source === target.id) {
+  //             setNewTarget(e.target)
+  //             setNodes([...nodes.filter(nds => nds.id !== target.id)])
+  //           }
+  //         })
+  //       }
+  //       return n;
+  //     })
+  //   );
 
-    setTarget(null);
-    dragRef.current = null;
-  };
+  //   setTarget(null);
+  //   dragRef.current = null;
+  // };
 
   function handleChangeTitle() {
     setTitleChange(true);
     setTitle("")
   }
 
-  useEffect(() => {
-    setEdges([...edges, {
-      source: newSource,
-      sourceHandle: 'b',
-      target: node,
-      targetHandle: 'a',
-      id: `reactflow__edge-${newSource}-${node}`,
-      type: 'addbuttonedge'
-    }, {
-      source: node,
-      sourceHandle: 'b',
-      target: newTarget,
-      targetHandle: 'a',
-      id: `reactflow__edge-${node}-${newTarget}`,
-      type: 'addbuttonedge'
-    }])
-  }, [newSource, newTarget])
+  // useEffect(() => {
+  //   setEdges([...edges, {
+  //     source: newSource,
+  //     sourceHandle: 'b',
+  //     target: node,
+  //     targetHandle: 'a',
+  //     id: `reactflow__edge-${newSource}-${node}`,
+  //     type: 'addbuttonedge'
+  //   }, {
+  //     source: node,
+  //     sourceHandle: 'b',
+  //     target: newTarget,
+  //     targetHandle: 'a',
+  //     id: `reactflow__edge-${node}-${newTarget}`,
+  //     type: 'addbuttonedge'
+  //   }])
+  // }, [newSource, newTarget])
 
   useEffect(() => {
     if(removeEdge !== "") {
-      setEdges([...edges.filter(item => item.id !== removeEdge)])
+      setEdges([...edges.filter(item => item.id !== removeEdge && item.source !== '')])
     }
   }, [removeEdge])
+
+  useEffect(() => {
+    console.log(edges)
+  }, [edges])
 
   return (
     <ReactFlowProvider>
@@ -265,8 +269,8 @@ export default function Home() {
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
                 fitView
-                onNodeDrag={onNodeDrag}
-                onNodeDragStop={onNodeDragStop}
+                // onNodeDrag={onNodeDrag}
+                // onNodeDragStop={onNodeDragStop}
               >
                 <Controls />
                 <MiniMap nodeColor={nodeColor} pannable zoomable />

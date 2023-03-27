@@ -31,10 +31,6 @@ export function ButtonEdge({
     setRemoveEdge(id)
   };
 
-  useEffect(() => {
-    console.log(id)
-  }, [edgePath, labelX, labelY])
-
   return (
     <>
       <path
