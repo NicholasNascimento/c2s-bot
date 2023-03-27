@@ -148,10 +148,6 @@ export default function Home() {
     setTitle("")
   }
 
-  // useEffect(() => {
-  //   console.log(nodes, edges, allMessages)
-  // }, [nodes, edges, allMessages])
-
   return (
     <ReactFlowProvider>
       <S.Container>
