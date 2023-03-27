@@ -28,6 +28,9 @@ export default function Home() {
   const [option, setOption] = useState<string>("input")
   const { allMessages, setAllMessages } = useContext(DataContext)
   
+  const dragRef = useRef(null);
+  const [target, setTarget] = useState(null);
+
   const reactFlowWrapper = useRef(null);
   const edgeUpdateSuccessful = useRef(true);
   const [nodes, setNodes] = useNodesState(initialNodes)
@@ -96,6 +99,49 @@ export default function Home() {
     },
     [reactFlowInstance]
   );
+
+  const onNodeDrag = (_, node) => {
+    const centerX = node.position.x + node.width / 2;
+    const centerY = node.position.y + node.height / 2;
+
+    const targetNode = nodes.find(
+      (n) =>
+        centerX > n.position.x &&
+        centerX < n.position.x + n.width &&
+        centerY > n.position.y &&
+        centerY < n.position.y + n.height &&
+        n.id !== node.id
+    );
+
+    setTarget(targetNode);
+  };
+
+  const onNodeDragStop = (_, node) => {
+    setNodes((nodes) =>
+      nodes.map((n) => {
+        if (n.id === target?.id && node.type !== 'startingNode') {
+          setEdges([...edges, {
+            source: target.id,
+            sourceHandle: 'b',
+            target: node.id,
+            targetHandle: 'a',
+            id: `reactflow__edge-${target.id}-${node.id}`
+          }])
+
+          edges.map((e) => {
+            if (e.id === `reactflow__edge-${target.id}-${node.id}`) {
+              console.log(e)
+              setEdges([...edges.filter(item => item.id !== e.id)])
+            }
+          })
+        }
+        return n;
+      })
+    );
+
+    setTarget(null);
+    dragRef.current = null;
+  };
 
   function handleChangeTitle() {
     setTitleChange(true);
@@ -199,6 +245,8 @@ export default function Home() {
                 onDragOver={onDragOver}
                 nodeTypes={nodeTypes}
                 fitView
+                onNodeDrag={onNodeDrag}
+                onNodeDragStop={onNodeDragStop}
               >
                 <Controls />
                 <MiniMap nodeColor={nodeColor} pannable zoomable />

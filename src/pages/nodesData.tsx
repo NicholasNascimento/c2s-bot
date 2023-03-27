@@ -19,7 +19,7 @@ const nodeColor = (node) => {
   
 const initialNodes: Node[] = [
   { 
-    id: 'node-1',
+    id: 'dndnode_0',
     type: 'startingNode',
     position: { x: 0, y: 0 },
     data: { value: 123 }
@@ -33,7 +33,7 @@ const nodeTypes: NodeTypes = {
   textInputNode: TextInputNode
 }
 
-let id = 0;
+let id = 1;
 const getId = () => `dndnode_${id++}`;
 
 export { initialNodes, initialEdges, nodeTypes, getId, nodeColor }
