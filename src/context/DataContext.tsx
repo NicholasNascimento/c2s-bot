@@ -6,6 +6,8 @@ interface DataContextProps {
     id: string
   }[]
   setAllMessages: (messages: {}[]) => void
+  removeEdge: string
+  setRemoveEdge: (removeEdge: string) => void
 }
 
 interface DataProviderProps {
@@ -16,9 +18,10 @@ export const DataContext = createContext({} as DataContextProps)
 
 export function DataProvider({ children }: DataProviderProps) {
   const [allMessages, setAllMessages] = useState([])
+  const [removeEdge, setRemoveEdge] = useState("")
 
   return (
-    <DataContext.Provider value={{ allMessages, setAllMessages }}>
+    <DataContext.Provider value={{ allMessages, setAllMessages, removeEdge, setRemoveEdge }}>
       {children}
     </DataContext.Provider>
   )

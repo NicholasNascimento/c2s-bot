@@ -16,7 +16,7 @@ import { ActionsSideBar } from '../components/ActionsSideBar';
 import { DataContext } from '../context/DataContext';
 import { inputNodeData } from '../components/InputSideBar/nodeData'
 import { actionsNodeData } from '../components/ActionsSideBar/nodeData'
-import { initialEdges, initialNodes, nodeTypes, getId, nodeColor } from './nodesData'
+import { initialEdges, initialNodes, nodeTypes, getId, nodeColor, edgeTypes } from './nodesData'
 
 import 'reactflow/dist/style.css'
 import * as S from './styles'
@@ -26,7 +26,7 @@ export default function Home() {
   const [titleChange, setTitleChange] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("Título do bot")
   const [option, setOption] = useState<string>("input")
-  const { allMessages, setAllMessages } = useContext(DataContext)
+  const { removeEdge } = useContext(DataContext)
   const [newSource, setNewSource] = useState("")
   const [newTarget, setNewTarget] = useState("")
   const [node, setNode] = useState("")
@@ -50,7 +50,7 @@ export default function Home() {
   );
   
   const onConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection) => setEdges((eds) => addEdge({...connection, type: 'addbuttonedge'}, eds)),
     [setEdges]
   );
 
@@ -153,15 +153,23 @@ export default function Home() {
       sourceHandle: 'b',
       target: node,
       targetHandle: 'a',
-      id: `reactflow__edge-${newSource}-${node}`
+      id: `reactflow__edge-${newSource}-${node}`,
+      type: 'addbuttonedge'
     }, {
       source: node,
       sourceHandle: 'b',
       target: newTarget,
       targetHandle: 'a',
-      id: `reactflow__edge-${node}-${newTarget}`
+      id: `reactflow__edge-${node}-${newTarget}`,
+      type: 'addbuttonedge'
     }])
   }, [newSource, newTarget])
+
+  useEffect(() => {
+    if(removeEdge !== "") {
+      setEdges([...edges.filter(item => item.id !== removeEdge)])
+    }
+  }, [removeEdge])
 
   return (
     <ReactFlowProvider>
@@ -255,6 +263,7 @@ export default function Home() {
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
                 fitView
                 onNodeDrag={onNodeDrag}
                 onNodeDragStop={onNodeDragStop}

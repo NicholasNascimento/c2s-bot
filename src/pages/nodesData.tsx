@@ -1,11 +1,13 @@
 import {
   Node,
   Edge,
-  NodeTypes} from 'reactflow'
+  NodeTypes,
+  EdgeTypes} from 'reactflow'
 
 import { InitialNode } from '../components/InitialNode';
 import { TextInputNode } from '../components/TextInputNode';
 import { AddNode } from '../components/AddNode';
+import { ButtonEdge } from '../components/AddButtonEdge';
 
 const nodeColor = (node) => {
   switch (node.type) {
@@ -45,14 +47,16 @@ const initialEdges: Edge[] = [
     sourceHandle: 'b',
     target: 'dndnode_1',
     targetHandle: 'a',
-    id: `reactflow__edge-dndnode_0-dndnode_1`
+    id: `reactflow__edge-dndnode_0-dndnode_1`,
+    type: 'addbuttonedge'
   },
   {
     source: 'dndnode_1',
     sourceHandle: 'b',
     target: 'dndnode_2',
     targetHandle: 'a',
-    id: `reactflow__edge-dndnode_1-dndnode_2`
+    id: `reactflow__edge-dndnode_1-dndnode_2`,
+    type: 'addbuttonedge'
   }
 ]
 
@@ -62,7 +66,11 @@ const nodeTypes: NodeTypes = {
   addNode: AddNode
 }
 
+const edgeTypes: EdgeTypes = {
+  addbuttonedge: ButtonEdge,
+};
+
 let id = 3;
 const getId = () => `dndnode_${id++}`;
 
-export { initialNodes, initialEdges, nodeTypes, getId, nodeColor }
+export { initialNodes, initialEdges, nodeTypes, getId, nodeColor, edgeTypes }
