@@ -27,6 +27,9 @@ export default function Home() {
   const [title, setTitle] = useState<string>("Título do bot")
   const [option, setOption] = useState<string>("input")
   const { allMessages, setAllMessages } = useContext(DataContext)
+  const [newSource, setNewSource] = useState("")
+  const [newTarget, setNewTarget] = useState("")
+  const [node, setNode] = useState("")
   
   const dragRef = useRef(null);
   const [target, setTarget] = useState(null);
@@ -119,19 +122,15 @@ export default function Home() {
   const onNodeDragStop = (_, node) => {
     setNodes((nodes) =>
       nodes.map((n) => {
-        if (n.id === target?.id && node.type !== 'startingNode') {
-          setEdges([...edges, {
-            source: target.id,
-            sourceHandle: 'b',
-            target: node.id,
-            targetHandle: 'a',
-            id: `reactflow__edge-${target.id}-${node.id}`
-          }])
-
+        if (n.id === target?.id && target.type === 'addNode') {
           edges.map((e) => {
-            if (e.id === `reactflow__edge-${target.id}-${node.id}`) {
-              console.log(e)
-              setEdges([...edges.filter(item => item.id !== e.id)])
+            if (e.target === target.id) {
+              setNewSource(e.source)
+              setNode(node.id)
+            }
+            if (e.source === target.id) {
+              setNewTarget(e.target)
+              setNodes([...nodes.filter(nds => nds.id !== target.id)])
             }
           })
         }
@@ -147,6 +146,22 @@ export default function Home() {
     setTitleChange(true);
     setTitle("")
   }
+
+  useEffect(() => {
+    setEdges([...edges, {
+      source: newSource,
+      sourceHandle: 'b',
+      target: node,
+      targetHandle: 'a',
+      id: `reactflow__edge-${newSource}-${node}`
+    }, {
+      source: node,
+      sourceHandle: 'b',
+      target: newTarget,
+      targetHandle: 'a',
+      id: `reactflow__edge-${node}-${newTarget}`
+    }])
+  }, [newSource, newTarget])
 
   return (
     <ReactFlowProvider>
