@@ -14,7 +14,6 @@ export function ButtonEdge({
   targetY,
   sourcePosition,
   targetPosition,
-  style = {},
   markerEnd,
 }) {
   const [edgePath, labelX, labelY] = getBezierPath({
@@ -35,7 +34,6 @@ export function ButtonEdge({
     <>
       <path
         id={id}
-        style={style}
         className="react-flow__edge-path"
         d={edgePath}
         markerEnd={markerEnd}

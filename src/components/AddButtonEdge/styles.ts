@@ -2,9 +2,13 @@ import styled from 'styled-components'
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 export const AddButtonEdge = styled.div`
-  width: fit-content;
+  background: transparent;
+  width: 40px;
+  height: 40px;
   display: flex;
-  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
 `
 
 export const AddButton = styled.button`
@@ -22,9 +26,4 @@ export const AddButton = styled.button`
 export const Plus = styled(AiOutlineCloseCircle)`
   font-size: 10px;
   color: var(--gray-75);
-`
-
-export const AddDropDown = styled.div`
-  position: absolute;
-  width: 10rem;
 `
