@@ -26,7 +26,7 @@ export default function Home() {
   const [titleChange, setTitleChange] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("Título do bot")
   const [option, setOption] = useState<string>("input")
-  const { removeEdge } = useContext(DataContext)
+  const { removeEdge, setRemoveEdge } = useContext(DataContext)
   const [newSource, setNewSource] = useState("")
   const [newTarget, setNewTarget] = useState("")
   const [node, setNode] = useState("")
@@ -168,6 +168,7 @@ export default function Home() {
   useEffect(() => {
     if(removeEdge !== "") {
       setEdges([...edges.filter(item => item.id !== removeEdge && item.source !== '')])
+      setRemoveEdge("")
     }
   }, [removeEdge])
 
