@@ -24,19 +24,13 @@ export function ButtonEdge({
     targetY,
     targetPosition,
   });
-  const { setIncludeNode, setEdgeInfo } = useContext(DataContext)
+  const { setIncludeNode, setPositionX, setPositionY } = useContext(DataContext)
 
   const onEdgeClick = (_, id) => {
     setIncludeNode(id)
+    setPositionX(labelX)
+    setPositionY(labelY)
   };
-
-  useEffect(() => {
-    setEdgeInfo([edgePath, labelX, labelY])
-  }, [edgePath, labelX, labelY])
-
-  // useEffect(() => {
-  //   console.log(id)
-  // } , [id])
 
   return (
     <>

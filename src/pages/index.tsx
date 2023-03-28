@@ -26,14 +26,13 @@ export default function Home() {
   const [titleChange, setTitleChange] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("Título do bot")
   const [option, setOption] = useState<string>("input")
-  const { includeNode, setIncludeNode, edgeInfo } = useContext(DataContext)
+  const { includeNode, setIncludeNode, positionX, positionY } = useContext(DataContext)
   const [newSource, setNewSource] = useState("")
   const [newTarget, setNewTarget] = useState("")
   const [node, setNode] = useState("")
   
   const dragRef = useRef(null);
   const [target, setTarget] = useState(null);
-
   const reactFlowWrapper = useRef(null);
   const edgeUpdateSuccessful = useRef(true);
   const [nodes, setNodes] = useNodesState(initialNodes)
@@ -171,7 +170,7 @@ export default function Home() {
       const newNode = {
         id: getAddId(),
         type: 'addNode',
-        position: {x: 100, y: 100},
+        position: {x: positionX, y: positionY},
         data: { label: `` },
       };
 

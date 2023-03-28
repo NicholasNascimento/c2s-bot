@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
 
 export const AddButtonEdge = styled.div`
   background: transparent;
@@ -23,7 +23,7 @@ export const AddButton = styled.button`
   line-height: 1;
 `
 
-export const Plus = styled(AiOutlineCloseCircle)`
+export const Plus = styled(AiOutlinePlusCircle)`
   font-size: 10px;
   color: var(--gray-75);
 `
