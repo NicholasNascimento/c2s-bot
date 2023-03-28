@@ -120,24 +120,22 @@ export default function Home() {
   };
 
   const onNodeDragStop = (_, node) => {
-    setNodes((nodes) =>
-      nodes.map((n) => {
-        if (n.id === target?.id && target.type === 'addNode') {
-          edges.map((e) => {
-            if (e.target === target.id) {
-              setNewSource(e.source)
-              setNode(node.id)
-            }
-            if (e.source === target.id) {
-              setNewTarget(e.target)
-              setNodes([...nodes.filter(nds => nds.id !== target.id)])
-              // setEdges([...edges.filter(e => e.source !== target.id && e.target !== target.id)])
-            }
-          })
-        }
-        return n;
-      })
-    );
+    nodes.map((n) => {
+      if (n.id === target?.id && target.type === 'addNode') {
+        edges.map((e) => {
+          if (e.target === target.id) {
+            setNewSource(e.source)
+            setNode(node.id)
+          }
+          if (e.source === target.id) {
+            setNewTarget(e.target)
+            setNodes([...nodes.filter(nds => nds.id !== target.id)])
+            setEdges([...edges.filter(e => e.source !== target.id && e.target !== target.id)])
+          }
+        })
+      }
+      return n;
+    })
 
     setTarget(null);
     dragRef.current = null;
