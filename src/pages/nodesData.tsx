@@ -47,4 +47,4 @@ const getId = () => `dndnode_${id++}`;
 let addId = 0;
 const getAddId = () => `addnode_${addId++}`;
 
-export { initialNodes, initialEdges, nodeTypes, getId, getAddId, nodeColor, edgeTypes }
+export { initialNodes, initialEdges, nodeTypes, getId, addId, getAddId, nodeColor, edgeTypes }

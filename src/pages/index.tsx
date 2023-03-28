@@ -16,7 +16,7 @@ import { ActionsSideBar } from '../components/ActionsSideBar';
 import { DataContext } from '../context/DataContext';
 import { inputNodeData } from '../components/InputSideBar/nodeData'
 import { actionsNodeData } from '../components/ActionsSideBar/nodeData'
-import { initialEdges, initialNodes, nodeTypes, getId, nodeColor, edgeTypes } from './nodesData'
+import { initialEdges, initialNodes, nodeTypes, getId, getAddId, addId, nodeColor, edgeTypes } from './nodesData'
 
 import 'reactflow/dist/style.css'
 import * as S from './styles'
@@ -26,7 +26,7 @@ export default function Home() {
   const [titleChange, setTitleChange] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("Título do bot")
   const [option, setOption] = useState<string>("input")
-  const { removeEdge, setRemoveEdge } = useContext(DataContext)
+  const { includeNode, setIncludeNode, edgeInfo } = useContext(DataContext)
   const [newSource, setNewSource] = useState("")
   const [newTarget, setNewTarget] = useState("")
   const [node, setNode] = useState("")
@@ -103,74 +103,104 @@ export default function Home() {
     [reactFlowInstance]
   );
 
-  // const onNodeDrag = (_, node) => {
-  //   const centerX = node.position.x + node.width / 2;
-  //   const centerY = node.position.y + node.height / 2;
+  const onNodeDrag = (_, node) => {
+    const centerX = node.position.x + node.width / 2;
+    const centerY = node.position.y + node.height / 2;
 
-  //   const targetNode = nodes.find(
-  //     (n) =>
-  //       centerX > n.position.x &&
-  //       centerX < n.position.x + n.width &&
-  //       centerY > n.position.y &&
-  //       centerY < n.position.y + n.height &&
-  //       n.id !== node.id
-  //   );
+    const targetNode = nodes.find(
+      (n) =>
+        centerX > n.position.x &&
+        centerX < n.position.x + n.width &&
+        centerY > n.position.y &&
+        centerY < n.position.y + n.height &&
+        n.id !== node.id
+    );
 
-  //   setTarget(targetNode);
-  // };
+    setTarget(targetNode);
+  };
 
-  // const onNodeDragStop = (_, node) => {
-  //   setNodes((nodes) =>
-  //     nodes.map((n) => {
-  //       if (n.id === target?.id && target.type === 'addNode') {
-  //         edges.map((e) => {
-  //           if (e.target === target.id) {
-  //             setNewSource(e.source)
-  //             setNode(node.id)
-  //           }
-  //           if (e.source === target.id) {
-  //             setNewTarget(e.target)
-  //             setNodes([...nodes.filter(nds => nds.id !== target.id)])
-  //           }
-  //         })
-  //       }
-  //       return n;
-  //     })
-  //   );
+  const onNodeDragStop = (_, node) => {
+    setNodes((nodes) =>
+      nodes.map((n) => {
+        if (n.id === target?.id && target.type === 'addNode') {
+          edges.map((e) => {
+            if (e.target === target.id) {
+              setNewSource(e.source)
+              setNode(node.id)
+            }
+            if (e.source === target.id) {
+              setNewTarget(e.target)
+              setNodes([...nodes.filter(nds => nds.id !== target.id)])
+              // setEdges([...edges.filter(e => e.source !== target.id && e.target !== target.id)])
+            }
+          })
+        }
+        return n;
+      })
+    );
 
-  //   setTarget(null);
-  //   dragRef.current = null;
-  // };
+    setTarget(null);
+    dragRef.current = null;
+  };
 
   function handleChangeTitle() {
     setTitleChange(true);
     setTitle("")
   }
 
-  // useEffect(() => {
-  //   setEdges([...edges, {
-  //     source: newSource,
-  //     sourceHandle: 'b',
-  //     target: node,
-  //     targetHandle: 'a',
-  //     id: `reactflow__edge-${newSource}-${node}`,
-  //     type: 'addbuttonedge'
-  //   }, {
-  //     source: node,
-  //     sourceHandle: 'b',
-  //     target: newTarget,
-  //     targetHandle: 'a',
-  //     id: `reactflow__edge-${node}-${newTarget}`,
-  //     type: 'addbuttonedge'
-  //   }])
-  // }, [newSource, newTarget])
+  useEffect(() => {
+    if (newSource !== '' && newTarget !== '') {
+      setEdges([...edges, {
+        source: newSource,
+        sourceHandle: 'b',
+        target: node,
+        targetHandle: 'a',
+        id: `reactflow__edge-${newSource}-${node}`,
+        type: 'addbuttonedge'
+      }, {
+        source: node,
+        sourceHandle: 'b',
+        target: newTarget,
+        targetHandle: 'a',
+        id: `reactflow__edge-${node}-${newTarget}`,
+        type: 'addbuttonedge'
+      }])
+    }
+  }, [newSource, newTarget])
 
   useEffect(() => {
-    if(removeEdge !== "") {
-      setEdges([...edges.filter(item => item.id !== removeEdge && item.source !== '')])
-      setRemoveEdge("")
+    if(includeNode !== "") {
+      const newNode = {
+        id: getAddId(),
+        type: 'addNode',
+        position: {x: 100, y: 100},
+        data: { label: `` },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+
+      edges.map((edg) => {
+        if (edg.id === includeNode) {
+          setEdges([...edges.filter(e => e.id !== includeNode), {
+            source: edg.source,
+            sourceHandle: 'b',
+            target: `addnode_${addId-1}`,
+            targetHandle: 'a',
+            id: `reactflow__edge-${edg.source}-addnode_${addId-1}`,
+            type: 'addbuttonedge'
+          }, {
+            source: `addnode_${addId-1}`,
+            sourceHandle: 'b',
+            target: edg.target,
+            targetHandle: 'a',
+            id: `reactflow__edge-addnode_${addId-1}-${edg.target}`,
+            type: 'addbuttonedge'
+          }])
+        }
+      })
     }
-  }, [removeEdge])
+    setIncludeNode("")
+  }, [includeNode])
 
   useEffect(() => {
     console.log(edges)
@@ -270,8 +300,8 @@ export default function Home() {
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
                 fitView
-                // onNodeDrag={onNodeDrag}
-                // onNodeDragStop={onNodeDragStop}
+                onNodeDrag={onNodeDrag}
+                onNodeDragStop={onNodeDragStop}
               >
                 <Controls />
                 <MiniMap nodeColor={nodeColor} pannable zoomable />
